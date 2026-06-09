@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Esmeralda's Pancake House · Monticello, IN</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;0,700;1,300;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --ink:#0D0500;--cream:#FBF5E6;--gold:#C8860A;--gold2:#F0B429;
+  --rust:#C04A1A;--rust2:#E8673A;--warm:#7A3B10;--muted:#8B6B4A;
+  --card:#FFF9F0;--dark:#180800;--darker:#0A0300
+}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);overflow-x:hidden}
+
+/* ── DESKTOP CURSOR ── */
+@media(pointer:fine){
+  body{cursor:none}
+  .cur{position:fixed;pointer-events:none;z-index:9999;mix-blend-mode:difference}
+  .cur-dot{width:8px;height:8px;background:#fff;border-radius:50%;transform:translate(-50%,-50%);transition:transform .15s}
+  .cur-ring{width:36px;height:36px;border:1.5px solid rgba(255,255,255,.6);border-radius:50%;transform:translate(-50%,-50%);transition:all .25s cubic-bezier(.23,1,.32,1)}
+  .cur-dot.big{transform:translate(-50%,-50%) scale(3)}
+  .cur-ring.big{transform:translate(-50%,-50%) scale(1.5);opacity:.4}
+  button,a,[onclick]{cursor:none!important}
+}
+@media(pointer:coarse){
+  .cur{display:none}
+}
+
+canvas#bg{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:.35}
+section,div,footer,nav{position:relative;z-index:1}
+canvas#bg{z-index:0}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:0 40px;display:flex;align-items:center;justify-content:space-between;height:64px;transition:all .4s ease}
+nav.scrolled{background:rgba(10,3,0,.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(200,134,10,.15)}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:#FFF8F0;font-style:italic;text-decoration:none}
+.nav-links{display:flex;gap:28px;list-style:none}
+.nav-links a{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,248,240,.55);text-decoration:none;font-weight:500;transition:color .25s;position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:-3px;left:0;width:0;height:1px;background:var(--gold2);transition:width .3s}
+.nav-links a:hover{color:var(--gold2)}
+.nav-links a:hover::after{width:100%}
+.nav-cta{background:var(--gold);color:var(--ink);font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;padding:9px 22px;border-radius:40px;border:none;transition:transform .25s,box-shadow .25s}
+.nav-cta:hover{transform:scale(1.05);box-shadow:0 4px 20px rgba(200,134,10,.4)}
+.nav-ham{display:none;flex-direction:column;gap:5px;background:none;border:none;padding:4px}
+.nav-ham span{width:24px;height:1.5px;background:rgba(255,248,240,.8);display:block;transition:all .3s}
+.nav-ham.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.nav-ham.open span:nth-child(2){opacity:0}
+.nav-ham.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+
+/* Mobile nav drawer */
+.mob-nav{position:fixed;inset:0;z-index:190;background:rgba(10,3,0,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:36px;transform:translateX(100%);transition:transform .4s cubic-bezier(.23,1,.32,1);padding:40px}
+.mob-nav.open{transform:none}
+.mob-nav a{font-family:'Cormorant Garamond',serif;font-size:40px;font-style:italic;color:rgba(255,248,240,.7);text-decoration:none;transition:color .2s;font-weight:300}
+.mob-nav a:hover{color:var(--gold2)}
+.mob-nav .mob-cta{background:var(--gold);color:var(--ink);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;letter-spacing:2px;text-transform:uppercase;padding:14px 36px;border-radius:50px;text-decoration:none;margin-top:16px}
+
+/* ── HERO ── */
+.hero{min-height:100vh;background:var(--darker);display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;padding:100px 24px 80px;text-align:center}
+.hero-grain{position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.08'/%3E%3C/svg%3E");pointer-events:none;opacity:.6;z-index:0}
+.hero-ring{position:absolute;border-radius:50%;border:1px solid rgba(200,134,10,.12);animation:expandRing 4s ease-out infinite;left:50%;top:50%;z-index:0}
+@keyframes expandRing{0%{transform:translate(-50%,-50%) scale(.4);opacity:.8}100%{transform:translate(-50%,-50%) scale(2.5);opacity:0}}
+.tag{display:inline-flex;align-items:center;gap:8px;background:rgba(200,134,10,.12);border:1px solid rgba(200,134,10,.3);color:var(--gold2);font-size:11px;font-weight:500;letter-spacing:3px;text-transform:uppercase;padding:7px 20px;border-radius:40px;margin-bottom:32px;animation:fadeUp .8s ease both}
+.tag-dot{width:6px;height:6px;border-radius:50%;background:var(--gold2);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.7)}}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:110px;font-weight:600;line-height:.92;color:#FFF8F0;letter-spacing:-1px;animation:fadeUp .8s .1s ease both}
+.hero-title em{font-style:italic;color:var(--gold2);display:block}
+.hero-title span{display:inline-block;background:linear-gradient(90deg,var(--rust2),var(--gold2),var(--rust2));background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 4s linear infinite}
+@keyframes shimmer{0%{background-position:200%}100%{background-position:-200%}}
+.hero-sub{font-size:11px;letter-spacing:4px;text-transform:uppercase;font-weight:300;color:rgba(255,248,240,.4);margin:20px 0 32px;animation:fadeUp .8s .2s ease both}
+.stars-row{display:flex;align-items:center;gap:6px;justify-content:center;margin-bottom:44px;animation:fadeUp .8s .3s ease both;flex-wrap:wrap}
+.s{color:var(--gold2);font-size:18px;animation:starPop .4s ease both}
+.s:nth-child(1){animation-delay:.4s}.s:nth-child(2){animation-delay:.5s}.s:nth-child(3){animation-delay:.6s}.s:nth-child(4){animation-delay:.7s}.s:nth-child(5){animation-delay:.8s;opacity:.35}
+@keyframes starPop{0%{transform:scale(0) rotate(-30deg);opacity:0}70%{transform:scale(1.3) rotate(5deg)}100%{transform:scale(1) rotate(0);opacity:1}}
+.stars-row span{font-size:13px;color:rgba(255,248,240,.5);margin-left:8px}
+.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;animation:fadeUp .8s .4s ease both}
+.btn-g{position:relative;overflow:hidden;background:var(--gold);color:var(--ink);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;letter-spacing:2px;text-transform:uppercase;padding:15px 36px;border:none;border-radius:50px;transition:transform .3s cubic-bezier(.23,1,.32,1)}
+.btn-g::before{content:'';position:absolute;inset:0;background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.25),transparent 70%);transform:translateX(-100%);transition:transform .6s}
+.btn-g:hover::before{transform:translateX(100%)}
+.btn-g:hover{transform:scale(1.05)}
+.btn-o{background:transparent;color:rgba(255,248,240,.8);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;letter-spacing:2px;text-transform:uppercase;padding:14px 36px;border:1px solid rgba(255,248,240,.2);border-radius:50px;transition:all .3s}
+.btn-o:hover{border-color:rgba(255,248,240,.7);background:rgba(255,248,240,.06)}
+.scroll-hint{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;color:rgba(255,248,240,.3);font-size:10px;letter-spacing:3px;text-transform:uppercase;animation:fadeUp 1s 1.2s ease both}
+.scroll-line{width:1px;height:44px;background:rgba(255,248,240,.2);position:relative;overflow:hidden}
+.scroll-line::after{content:'';position:absolute;top:-100%;left:0;width:100%;height:100%;background:rgba(200,134,10,.8);animation:scrollDown 2s 1.5s ease-in-out infinite}
+@keyframes scrollDown{0%{top:-100%}100%{top:200%}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── TICKER ── */
+.ticker{background:var(--gold);overflow:hidden;white-space:nowrap;padding:11px 0;position:relative;z-index:10}
+.ticker-track{display:inline-flex;animation:tickerMove 28s linear infinite}
+.ticker-item{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--ink);padding:0 28px}
+.ticker-sep{opacity:.3;margin:0 4px}
+@keyframes tickerMove{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ── RIBBON ── */
+.ribbon{background:var(--ink);display:grid;grid-template-columns:repeat(4,1fr)}
+.rib-item{padding:26px 16px;text-align:center;border-right:1px solid rgba(255,248,240,.07);transition:background .3s}
+.rib-item:last-child{border-right:none}
+.rib-item:hover{background:rgba(200,134,10,.07)}
+.rib-icon{font-size:22px;margin-bottom:8px;display:block}
+.rib-val{font-size:14px;font-weight:500;color:rgba(255,248,240,.9);margin-bottom:3px}
+.rib-lbl{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,248,240,.3)}
+
+/* ── ABOUT ── */
+.about-sec{background:var(--cream);padding:100px 40px}
+.about-wrap{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;max-width:1100px;margin:0 auto}
+.ov{font-size:11px;font-weight:500;letter-spacing:4px;text-transform:uppercase;color:var(--rust);margin-bottom:14px}
+.sec-h2{font-family:'Cormorant Garamond',serif;font-size:54px;font-weight:600;line-height:1.1;color:var(--ink);margin-bottom:20px}
+.sec-h2 em{font-style:italic;color:var(--rust2)}
+.about-left p{font-size:15px;line-height:1.85;color:var(--muted);margin-bottom:32px}
+.stat-row{display:flex;gap:28px;flex-wrap:wrap}
+.stat-b .num{font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:700;color:var(--ink);line-height:1}
+.stat-b .lbl{font-size:11px;color:var(--muted);margin-top:2px}
+.divider-v{width:1px;background:rgba(13,5,0,.1);height:48px;align-self:center}
+.about-right{display:flex;flex-direction:column;gap:16px}
+.feat-card{background:var(--card);border-radius:16px;padding:22px 24px;border:1px solid rgba(200,134,10,.12);display:flex;align-items:center;gap:18px;transition:all .35s cubic-bezier(.23,1,.32,1)}
+.feat-card:hover{transform:translateX(8px) translateY(-2px);border-color:rgba(200,134,10,.4);box-shadow:0 12px 40px rgba(200,134,10,.1)}
+.feat-card:nth-child(2){margin-left:20px}
+.feat-icon-wrap{width:50px;height:50px;min-width:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px}
+.ic-g{background:rgba(200,134,10,.1)}.ic-r{background:rgba(184,74,26,.1)}.ic-gr{background:rgba(45,90,39,.1)}
+.feat-card h4{font-size:14px;font-weight:500;color:var(--ink);margin-bottom:3px}
+.feat-card p{font-size:12px;color:var(--muted);line-height:1.5}
+
+/* ── SPECIALS ── */
+.specials-sec{background:linear-gradient(135deg,var(--dark),#1a0800);padding:80px 24px;overflow:hidden}
+.specials-sec::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(200,134,10,.1),transparent 60%);pointer-events:none}
+.specials-inner{max-width:1100px;margin:0 auto}
+.sec-ov{font-size:11px;font-weight:500;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.sec-h{font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:600;line-height:1.1;color:#FFF8F0;margin-bottom:10px}
+.sec-h em{font-style:italic;color:var(--gold2)}
+.sec-p{font-size:13px;color:rgba(255,248,240,.45);line-height:1.7;max-width:440px;margin-bottom:36px}
+.spec-days{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:28px}
+.spec-day-btn{background:rgba(255,248,240,.05);border:1px solid rgba(255,248,240,.1);color:rgba(255,248,240,.5);font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;padding:9px 16px;border-radius:40px;transition:all .25s}
+.spec-day-btn.active{background:var(--gold);color:var(--ink);border-color:var(--gold)}
+.spec-day-btn:not(.active):hover{border-color:rgba(200,134,10,.4);color:var(--gold2)}
+.spec-panel{display:none;grid-template-columns:repeat(3,1fr);gap:14px;animation:fadeUp .35s ease}
+.spec-panel.active{display:grid}
+.spec-card{background:rgba(255,248,240,.04);border:1px solid rgba(200,134,10,.15);border-radius:16px;padding:22px 18px;transition:all .3s cubic-bezier(.23,1,.32,1)}
+.spec-card:hover{background:rgba(200,134,10,.08);border-color:rgba(200,134,10,.4);transform:translateY(-5px)}
+.spec-card-emoji{font-size:34px;margin-bottom:12px;display:block}
+.spec-card-name{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:#FFF8F0;margin-bottom:4px}
+.spec-card-note{font-size:12px;color:rgba(255,248,240,.45);line-height:1.55;margin-bottom:12px}
+.spec-badge{display:inline-block;background:rgba(200,134,10,.2);border:1px solid rgba(200,134,10,.35);color:var(--gold2);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;border-radius:20px}
+
+/* ── GALLERY ── */
+.gallery-sec{background:var(--ink);padding:90px 24px}
+.gallery-inner{max-width:1100px;margin:0 auto}
+.photo-grid{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:auto auto;gap:12px;margin-top:32px}
+.photo-item{border-radius:14px;overflow:hidden;position:relative}
+.photo-item img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s cubic-bezier(.23,1,.32,1);min-height:180px}
+.photo-item:hover img{transform:scale(1.07)}
+.photo-item::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(13,5,0,.55),transparent 55%);opacity:0;transition:opacity .3s}
+.photo-item:hover::after{opacity:1}
+.photo-item.big{grid-row:span 2}
+.photo-item.big img{min-height:372px}
+.photo-caption{position:absolute;bottom:14px;left:14px;color:#FFF8F0;font-size:12px;font-weight:500;letter-spacing:1px;opacity:0;transition:opacity .3s;z-index:2}
+.photo-item:hover .photo-caption{opacity:1}
+.photo-zoom{position:absolute;top:12px;right:12px;background:rgba(13,5,0,.5);border-radius:8px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .3s;z-index:2;color:#fff;font-size:14px}
+.photo-item:hover .photo-zoom{opacity:1}
+
+/* ── LIGHTBOX ── */
+.lightbox{position:fixed;inset:0;z-index:500;background:rgba(10,3,0,.97);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
+.lightbox.open{opacity:1;pointer-events:all}
+.lightbox img{max-width:88vw;max-height:82vh;border-radius:10px;object-fit:contain;transform:scale(.9);transition:transform .35s cubic-bezier(.23,1,.32,1)}
+.lightbox.open img{transform:scale(1)}
+.lb-close{position:absolute;top:20px;right:28px;color:rgba(255,248,240,.6);font-size:36px;background:none;border:none;line-height:1;transition:color .2s;padding:4px}
+.lb-close:hover{color:#fff}
+.lb-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,248,240,.07);border:1px solid rgba(255,248,240,.12);color:#fff;border-radius:50%;width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-size:20px;transition:all .25s;border:none}
+.lb-nav:hover{background:rgba(200,134,10,.3)}
+.lb-prev{left:20px}.lb-next{right:20px}
+.lb-counter{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);color:rgba(255,248,240,.35);font-size:12px;letter-spacing:2px}
+
+/* ── MENU ── */
+.menu-sec{background:var(--darker);padding:100px 24px}
+.menu-inner{max-width:1100px;margin:0 auto}
+.tabs{display:flex;gap:6px;margin-bottom:36px;background:rgba(255,248,240,.04);border-radius:50px;padding:4px;width:fit-content;flex-wrap:wrap}
+.tb{background:transparent;border:none;color:rgba(255,248,240,.45);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;padding:10px 20px;border-radius:50px;transition:all .25s}
+.tb.on{background:var(--gold);color:var(--ink)}
+.tb:not(.on):hover{color:rgba(255,248,240,.8)}
+.mgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
+.mc{background:rgba(255,248,240,.04);border:1px solid rgba(255,248,240,.08);border-radius:18px;padding:26px 20px;transition:all .35s cubic-bezier(.23,1,.32,1);position:relative;overflow:hidden}
+.mc::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(200,134,10,.12),transparent 70%);opacity:0;transition:opacity .3s}
+.mc:hover{transform:translateY(-7px);border-color:rgba(200,134,10,.35)}
+.mc:hover::before{opacity:1}
+.mc-emoji{font-size:38px;margin-bottom:14px;display:block;transition:transform .3s}
+.mc:hover .mc-emoji{transform:scale(1.12) rotate(-5deg)}
+.mc-name{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:600;color:#FFF8F0;margin-bottom:6px}
+.mc-desc{font-size:12px;color:rgba(255,248,240,.4);line-height:1.6;margin-bottom:14px}
+.mc-badge{display:inline-block;background:rgba(200,134,10,.15);border:1px solid rgba(200,134,10,.3);color:var(--gold2);font-size:10px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;padding:3px 11px;border-radius:20px}
+.menu-cta{text-align:center;margin-top:36px}
+.menu-cta a{display:inline-block;background:var(--gold);color:var(--ink);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;letter-spacing:2px;text-transform:uppercase;padding:13px 32px;border-radius:50px;text-decoration:none;transition:transform .25s,box-shadow .25s}
+.menu-cta a:hover{transform:scale(1.05);box-shadow:0 6px 24px rgba(200,134,10,.4)}
+
+/* ── HIGHLIGHTS ── */
+.hi-sec{background:var(--cream);padding:80px 24px;overflow:hidden}
+.hi-sec::before{content:'';position:absolute;top:-200px;right:-200px;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(200,134,10,.08),transparent 70%);pointer-events:none}
+.hi-inner{max-width:1100px;margin:0 auto}
+.hi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:52px}
+.hi-item{padding:30px 18px;border-radius:18px;text-align:center;background:var(--card);border:1px solid rgba(200,134,10,.1);transition:all .35s cubic-bezier(.23,1,.32,1);position:relative;overflow:hidden}
+.hi-item::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--rust),var(--gold2));transform:scaleX(0);transition:transform .35s;transform-origin:left}
+.hi-item:hover::after{transform:scaleX(1)}
+.hi-item:hover{transform:translateY(-6px);border-color:rgba(200,134,10,.3);box-shadow:0 14px 44px rgba(200,134,10,.09)}
+.hi-num{font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:700;color:rgba(200,134,10,.12);position:absolute;top:8px;right:14px;line-height:1}
+.hi-icon{font-size:34px;margin-bottom:12px;display:block}
+.hi-title{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:var(--ink);margin-bottom:5px}
+.hi-desc{font-size:12px;color:var(--muted);line-height:1.6}
+
+/* ── REVIEWS ── */
+.rev-sec{background:#FFF9F0;padding:100px 24px}
+.rev-inner{max-width:1100px;margin:0 auto}
+.rev-header{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:20px;margin-bottom:52px}
+.score-big{font-family:'Cormorant Garamond',serif;font-size:86px;font-weight:700;line-height:1;color:var(--ink)}
+.score-side .str{display:flex;gap:4px;margin-bottom:4px}
+.score-side .str span{color:var(--gold2);font-size:20px}
+.score-side p{font-size:12px;color:var(--muted)}
+.rgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.rcard{background:var(--card);border-radius:18px;padding:28px 24px;border:1px solid rgba(200,134,10,.12);transition:all .35s cubic-bezier(.23,1,.32,1);position:relative}
+.rcard::before{content:'\201C';font-family:'Cormorant Garamond',serif;font-size:76px;font-weight:700;color:rgba(200,134,10,.07);position:absolute;top:10px;left:18px;line-height:1}
+.rcard:hover{transform:translateY(-5px);border-color:rgba(200,134,10,.28);box-shadow:0 14px 44px rgba(200,134,10,.07)}
+.rstr{display:flex;gap:3px;margin-bottom:14px}
+.rstr span{color:var(--gold2);font-size:13px}
+.rtext{font-family:'Cormorant Garamond',serif;font-size:15px;font-style:italic;font-weight:300;color:var(--warm);line-height:1.75;margin-bottom:20px}
+.rvr{display:flex;align-items:center;gap:12px}
+.rvr-av{width:38px;height:38px;min-width:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:#fff}
+.rvr-name{font-size:13px;font-weight:500;color:var(--ink)}
+.rvr-time{font-size:11px;color:var(--muted);margin-top:1px}
+
+/* ── RATE WIDGET ── */
+.rating-sec{background:var(--ink);padding:80px 24px}
+.rating-inner{max-width:600px;margin:0 auto;text-align:center}
+.rate-stars{display:flex;gap:14px;justify-content:center;margin:28px 0 14px}
+.rate-star{font-size:46px;color:rgba(255,248,240,.12);transition:all .2s;display:inline-block}
+.rate-star.lit{color:var(--gold2);transform:scale(1.1)}
+.rate-msg{font-family:'Cormorant Garamond',serif;font-size:20px;font-style:italic;color:rgba(255,248,240,.45);min-height:28px;transition:all .3s}
+.rate-msg.show{color:var(--gold2)}
+.rate-submit{margin-top:22px;background:var(--gold);color:var(--ink);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;letter-spacing:2px;text-transform:uppercase;padding:12px 28px;border-radius:40px;border:none;transition:all .3s;opacity:0;transform:translateY(8px);pointer-events:none}
+.rate-submit.visible{opacity:1;transform:translateY(0);pointer-events:all}
+.rate-submit:hover{transform:scale(1.04) translateY(0)}
+.rate-thanks{display:none;font-family:'Cormorant Garamond',serif;font-size:26px;font-style:italic;color:var(--gold2);animation:fadeUp .5s ease}
+
+/* ── ORDER BAR ── */
+.order-bar{background:var(--gold);padding:15px 24px;display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap;position:relative;z-index:10}
+.order-bar p{font-size:13px;font-weight:500;color:var(--ink)}
+.order-btns{display:flex;gap:9px;flex-wrap:wrap;justify-content:center}
+.ob{background:var(--ink);color:rgba(255,248,240,.88);font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;padding:9px 20px;border-radius:40px;border:none;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:all .25s}
+.ob:hover{background:#1a0800;transform:scale(1.04)}
+
+/* ── LOCATION ── */
+.loc-wrap{background:var(--darker);padding:100px 24px;overflow:hidden}
+.loc-wrap::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 100%,rgba(200,134,10,.07),transparent 70%);pointer-events:none}
+.loc-inner{max-width:1100px;margin:0 auto;position:relative;z-index:1}
+.loc-header{text-align:center;margin-bottom:52px}
+.loc-ov{font-size:11px;font-weight:500;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.loc-h{font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:600;color:#FFF8F0;line-height:1.1}
+.loc-h em{font-style:italic;color:var(--gold2)}
+.loc-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+.map-card{border-radius:18px;overflow:hidden;border:1px solid rgba(200,134,10,.2);position:relative}
+.map-embed{width:100%;height:340px;border:none;display:block}
+.map-btn{position:absolute;bottom:14px;right:14px;background:var(--gold);color:var(--ink);font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;padding:9px 16px;border-radius:40px;text-decoration:none;display:flex;align-items:center;gap:6px;box-shadow:0 4px 20px rgba(0,0,0,.4);transition:transform .25s,box-shadow .25s}
+.map-btn:hover{transform:scale(1.05);box-shadow:0 6px 28px rgba(0,0,0,.5)}
+.right-col{display:flex;flex-direction:column;gap:14px}
+.addr-card{background:rgba(255,248,240,.05);border:1px solid rgba(200,134,10,.18);border-radius:18px;padding:24px 22px}
+.addr-row{display:flex;align-items:flex-start;gap:13px;margin-bottom:16px}
+.addr-row:last-child{margin-bottom:0}
+.addr-icon{width:38px;height:38px;min-width:38px;border-radius:11px;background:rgba(200,134,10,.12);display:flex;align-items:center;justify-content:center;font-size:17px}
+.addr-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,248,240,.3);font-weight:500;margin-bottom:3px}
+.addr-val{font-size:13px;color:rgba(255,248,240,.8);line-height:1.6}
+.addr-val a{color:inherit;text-decoration:none}
+.addr-val a:hover{color:var(--gold2)}
+
+/* ── HOURS ── */
+.hours-card{background:rgba(255,248,240,.04);border:1px solid rgba(200,134,10,.12);border-radius:18px;padding:20px 22px}
+.hours-lbl{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,248,240,.3);font-weight:500;margin-bottom:12px}
+.hours-row{display:flex;justify-content:space-between;align-items:center;padding:8px 6px;border-bottom:1px solid rgba(255,248,240,.05);font-size:12px;border-radius:6px;gap:8px}
+.hours-row:last-child{border-bottom:none}
+.hours-row.today{background:rgba(200,134,10,.09)}
+.hours-day{color:rgba(255,248,240,.5);white-space:nowrap}
+.hours-day.today-label{color:var(--gold2);font-weight:500}
+.hours-time{color:rgba(255,248,240,.82);font-weight:500;text-align:right;line-height:1.4}
+.hours-time.late{color:var(--gold2)}
+.today-chip{display:inline-block;background:var(--gold);color:var(--ink);font-size:9px;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:2px 7px;border-radius:10px;margin-left:7px;vertical-align:middle}
+
+/* ── SOCIAL CARD ── */
+.social-card{background:rgba(255,248,240,.04);border:1px solid rgba(200,134,10,.14);border-radius:18px;padding:20px 22px}
+.social-lbl{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,248,240,.3);font-weight:500;margin-bottom:14px}
+.social-links{display:flex;flex-direction:column;gap:10px}
+.slink{display:flex;align-items:center;gap:12px;background:rgba(255,248,240,.06);border:1px solid rgba(255,248,240,.1);border-radius:13px;padding:12px 14px;text-decoration:none;transition:all .3s cubic-bezier(.23,1,.32,1)}
+.slink:hover{transform:translateY(-2px)}
+.slink.fb:hover{background:rgba(24,119,242,.15);border-color:rgba(24,119,242,.4)}
+.slink.ig:hover{background:rgba(225,48,108,.15);border-color:rgba(225,48,108,.4)}
+.slink.gm:hover{background:rgba(66,133,244,.15);border-color:rgba(66,133,244,.35)}
+/* THE FIX: fixed-size icon box that never shrinks */
+.slink-icon{
+  width:34px;height:34px;
+  min-width:34px;min-height:34px;
+  border-radius:9px;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+  flex-shrink:0;
+}
+.slink.fb .slink-icon{background:#1877F2}
+.slink.ig .slink-icon{background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)}
+.slink.gm .slink-icon{background:#fff}
+.slink-icon svg{display:block;width:16px;height:16px;min-width:16px;min-height:16px;flex-shrink:0}
+.slink.gm .slink-icon svg{width:18px;height:18px;min-width:18px;min-height:18px}
+.slink-text{flex:1;min-width:0}
+.slink-name{font-size:13px;font-weight:500;color:rgba(255,248,240,.85);display:block;line-height:1.2}
+.slink-handle{font-size:11px;color:rgba(255,248,240,.35);display:block;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.slink.gm .slink-name{color:#222}.slink.gm .slink-handle{color:#666}
+
+/* ── CTA ── */
+.mar-sec{background:linear-gradient(135deg,var(--rust) 0%,var(--dark) 60%,var(--ink) 100%);padding:80px 24px;overflow:hidden}
+.mar-sec::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:700px;border-radius:50%;border:1px solid rgba(255,248,240,.04);pointer-events:none;animation:rotateBorder 20s linear infinite}
+@keyframes rotateBorder{to{transform:translate(-50%,-50%) rotate(360deg)}}
+.mar-inner{max-width:700px;margin:0 auto;text-align:center;position:relative;z-index:1}
+.mar-h{font-family:'Cormorant Garamond',serif;font-size:64px;font-weight:600;color:#FFF8F0;line-height:1.1;margin-bottom:14px}
+.mar-h em{font-style:italic;color:var(--gold2)}
+.mar-p{font-size:14px;color:rgba(255,248,240,.5);line-height:1.7;margin-bottom:36px}
+.mar-chips{display:flex;gap:9px;justify-content:center;flex-wrap:wrap}
+.chip{background:rgba(255,248,240,.07);border:1px solid rgba(255,248,240,.15);color:rgba(255,248,240,.7);font-size:12px;padding:7px 18px;border-radius:40px}
+
+/* ── FOOTER ── */
+footer{background:var(--darker);padding:56px 24px 32px;text-align:center}
+footer h2{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:600;color:#FFF8F0;margin-bottom:6px}
+footer h2 em{font-style:italic;color:var(--gold2)}
+footer .fp{font-size:12px;color:rgba(255,248,240,.3);margin-bottom:4px}
+footer .fp a{color:rgba(255,248,240,.5);text-decoration:none;transition:color .2s}
+footer .fp a:hover{color:var(--gold2)}
+.footer-social{display:flex;gap:10px;justify-content:center;margin:20px 0 26px}
+.fsoc{
+  width:38px;height:38px;min-width:38px;
+  border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  text-decoration:none;
+  transition:transform .2s,opacity .2s;
+  opacity:.7;
+  overflow:hidden;
+  flex-shrink:0;
+}
+.fsoc:hover{transform:translateY(-3px);opacity:1}
+.fsoc.fb{background:#1877F2}
+.fsoc.ig{background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)}
+.fsoc.gm{background:#fff}
+.fsoc svg{display:block;flex-shrink:0}
+.fgrid{display:flex;gap:36px;justify-content:center;flex-wrap:wrap;margin-bottom:28px}
+.fi .fl{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,248,240,.25);font-weight:500;margin-bottom:4px}
+.fi .fv{font-size:13px;color:rgba(255,248,240,.75);font-weight:500}
+.fline{border:none;border-top:1px solid rgba(255,248,240,.06);margin-bottom:18px}
+.fcopy{font-size:11px;color:rgba(255,248,240,.18)}
+.fcopy a{color:rgba(255,248,240,.35);text-decoration:none}
+.fcopy a:hover{color:var(--gold2)}
+
+/* ── BACK TO TOP ── */
+.btt{position:fixed;bottom:28px;right:28px;width:44px;height:44px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,.4);transform:translateY(80px);transition:transform .35s cubic-bezier(.23,1,.32,1),box-shadow .25s;z-index:200;border:none}
+.btt.show{transform:translateY(0)}
+.btt:hover{box-shadow:0 8px 28px rgba(200,134,10,.5);transform:translateY(-3px)}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(80px);background:rgba(200,134,10,.95);color:var(--ink);font-size:13px;font-weight:500;padding:11px 22px;border-radius:40px;z-index:300;transition:transform .4s cubic-bezier(.23,1,.32,1);white-space:nowrap;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* ── REVEAL ── */
+.reveal{opacity:0;transform:translateY(36px);transition:opacity .85s cubic-bezier(.23,1,.32,1),transform .85s cubic-bezier(.23,1,.32,1)}
+.revealed{opacity:1;transform:none}
+.delay1{transition-delay:.1s}.delay2{transition-delay:.2s}.delay3{transition-delay:.3s}
+
+
+/* ══════════════════════════════════════════
+   RESPONSIVE — locked per device tier
+   320-480   : phone portrait
+   481-768   : phone landscape / small tablet
+   769-1024  : iPad / tablet / small laptop
+   1025-1280 : laptop
+   1281+     : desktop (base styles above)
+══════════════════════════════════════════ */
+
+/* ── DESKTOP 1281+ : base styles above already cover this ── */
+@media(min-width:1281px){
+  .about-wrap{grid-template-columns:1fr 1fr;gap:80px;padding:100px 60px}
+  .hi-grid{grid-template-columns:repeat(4,1fr)}
+  .rgrid{grid-template-columns:repeat(3,1fr)}
+  .loc-grid{grid-template-columns:1fr 1fr}
+  .mgrid{grid-template-columns:repeat(4,1fr)}
+  .spec-panel{grid-template-columns:repeat(3,1fr)}
+  .photo-grid{grid-template-columns:repeat(3,1fr)}
+  .photo-item.big{grid-row:span 2}
+  .photo-item.big img{min-height:372px}
+}
+
+/* ── LAPTOP 1025–1280 ── */
+@media(min-width:1025px) and (max-width:1280px){
+  nav{padding:0 32px}
+  .about-wrap{grid-template-columns:1fr 1fr;gap:60px;padding:90px 40px}
+  .hi-grid{grid-template-columns:repeat(4,1fr);gap:16px}
+  .rgrid{grid-template-columns:repeat(3,1fr);gap:16px}
+  .loc-grid{grid-template-columns:1fr 1fr;gap:20px}
+  .mgrid{grid-template-columns:repeat(4,1fr);gap:12px}
+  .spec-panel{grid-template-columns:repeat(3,1fr)}
+  .photo-grid{grid-template-columns:repeat(3,1fr);gap:10px}
+  .photo-item.big{grid-row:span 2}
+  .photo-item.big img{min-height:340px}
+  .hero-title{font-size:90px}
+  .sec-h2{font-size:46px}
+  .sec-h{font-size:44px}
+  .loc-h{font-size:44px}
+  .mar-h{font-size:56px}
+  .score-big{font-size:80px}
+  .stat-b .num{font-size:40px}
+}
+
+/* ── iPAD / TABLET / SMALL LAPTOP 769–1024 ── */
+@media(min-width:769px) and (max-width:1024px){
+  nav{padding:0 24px;height:60px}
+  .nav-links{gap:18px}
+  .nav-links a{font-size:10px;letter-spacing:1.5px}
+  .nav-cta{padding:8px 16px;font-size:10px}
+
+  .hero{padding:100px 32px 80px}
+  .hero-title{font-size:72px}
+  .hero-sub{font-size:10px}
+
+  .ribbon{grid-template-columns:repeat(4,1fr)}
+  .rib-val{font-size:13px}
+
+  .about-sec{padding:80px 32px}
+  .about-wrap{grid-template-columns:1fr 1fr;gap:48px}
+  .sec-h2{font-size:38px}
+  .stat-b .num{font-size:36px}
+  .feat-card:nth-child(2){margin-left:0}
+
+  .specials-sec{padding:72px 32px}
+  .spec-panel{grid-template-columns:repeat(2,1fr)}
+
+  .gallery-sec{padding:72px 32px}
+  .photo-grid{grid-template-columns:repeat(3,1fr);gap:10px}
+  .photo-item.big{grid-row:span 2}
+  .photo-item.big img{min-height:300px}
+  .photo-item img{min-height:145px}
+
+  .menu-sec{padding:80px 32px}
+  .mgrid{grid-template-columns:repeat(2,1fr);gap:12px}
+  .mc-name{font-size:17px}
+
+  .hi-sec{padding:72px 32px}
+  .hi-grid{grid-template-columns:repeat(2,1fr);gap:16px}
+  .sec-h2{font-size:36px}
+
+  .rev-sec{padding:80px 32px}
+  .rgrid{grid-template-columns:repeat(2,1fr);gap:16px}
+  .score-big{font-size:72px}
+  .rev-header{margin-bottom:36px}
+
+  .rating-sec{padding:72px 32px}
+  .rate-stars{gap:12px}
+  .rate-star{font-size:42px}
+
+  .order-bar{flex-wrap:wrap;gap:14px;padding:14px 24px}
+
+  .loc-wrap{padding:80px 32px}
+  .loc-grid{grid-template-columns:1fr 1fr;gap:20px}
+  .loc-h{font-size:38px}
+  .map-embed{height:320px}
+
+  .mar-sec{padding:72px 32px}
+  .mar-h{font-size:50px}
+
+  footer{padding:52px 32px 28px}
+  .fgrid{gap:28px}
+}
+
+/* ── PHONE LANDSCAPE + LARGE PHONE 481–768 ── */
+@media(min-width:481px) and (max-width:768px){
+  nav{padding:0 20px;height:58px}
+  .nav-links,.nav-cta{display:none}
+  .nav-ham{display:flex}
+
+  .hero{padding:90px 28px 72px}
+  .hero-title{font-size:64px}
+  .hero-sub{font-size:10px;letter-spacing:3px}
+  .scroll-hint{display:none}
+  .btn-g,.btn-o{font-size:12px;padding:13px 28px}
+
+  .ticker-item{font-size:10px;padding:0 18px}
+
+  .ribbon{grid-template-columns:repeat(2,1fr)}
+  .rib-item{padding:18px 14px;border-right:none;border-bottom:1px solid rgba(255,248,240,.07)}
+  .rib-item:nth-child(odd){border-right:1px solid rgba(255,248,240,.07)}
+  .rib-item:nth-last-child(-n+2){border-bottom:none}
+
+  .about-sec{padding:64px 28px}
+  .about-wrap{grid-template-columns:1fr;gap:40px}
+  .sec-h2{font-size:34px}
+  .feat-card:nth-child(2){margin-left:0}
+  .stat-b .num{font-size:36px}
+
+  .specials-sec{padding:64px 28px}
+  .spec-panel{grid-template-columns:repeat(2,1fr)}
+
+  .gallery-sec{padding:64px 28px}
+  .photo-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+  .photo-item.big{grid-row:span 1}
+  .photo-item.big img,.photo-item img{min-height:160px}
+
+  .menu-sec{padding:64px 28px}
+  .tabs{width:100%;justify-content:center}
+  .tb{font-size:11px;padding:9px 14px}
+  .mgrid{grid-template-columns:repeat(2,1fr);gap:12px}
+  .mc{padding:20px 16px}
+  .mc-emoji{font-size:32px}
+  .mc-name{font-size:17px}
+
+  .hi-sec{padding:64px 28px}
+  .hi-grid{grid-template-columns:repeat(2,1fr);gap:14px;margin-top:36px}
+  .hi-item{padding:24px 14px}
+
+  .rev-sec{padding:64px 28px}
+  .rev-header{flex-direction:column;align-items:flex-start;margin-bottom:28px}
+  .score-big{font-size:68px}
+  .rgrid{grid-template-columns:repeat(2,1fr);gap:14px}
+
+  .rating-sec{padding:64px 28px}
+  .rate-stars{gap:10px}
+  .rate-star{font-size:42px}
+
+  .order-bar{flex-direction:column;gap:12px;padding:18px}
+  .order-bar p{text-align:center;font-size:12px}
+
+  .loc-wrap{padding:64px 28px}
+  .loc-grid{grid-template-columns:1fr}
+  .loc-h{font-size:34px}
+  .map-embed{height:280px}
+  .hours-row{flex-wrap:wrap;gap:4px}
+  .hours-time{font-size:11px;text-align:left}
+
+  .mar-sec{padding:64px 28px}
+  .mar-h{font-size:44px}
+  .mar-chips{gap:7px}
+  .chip{font-size:11px;padding:6px 14px}
+
+  footer{padding:48px 28px 28px}
+  footer h2{font-size:30px}
+  .fgrid{gap:20px}
+
+  .btt{bottom:20px;right:20px;width:40px;height:40px}
+  .lb-nav{width:40px;height:40px;font-size:16px}
+  .lb-prev{left:10px}.lb-next{right:10px}
+  .lightbox img{max-width:94vw;max-height:78vh}
+}
+
+/* ── PHONE PORTRAIT 320–480 ── */
+@media(max-width:480px){
+  nav{padding:0 16px;height:56px}
+  .nav-links,.nav-cta{display:none}
+  .nav-ham{display:flex}
+
+  .hero{padding:84px 16px 64px}
+  .hero-title{font-size:48px;letter-spacing:-0.5px}
+  .hero-title em{font-size:48px}
+  .hero-sub{font-size:9px;letter-spacing:2.5px}
+  .tag{font-size:9px;padding:6px 14px;letter-spacing:2px}
+  .stars-row span{font-size:11px}
+  .btn-g,.btn-o{font-size:11px;padding:12px 22px;letter-spacing:1.5px}
+  .hero-btns{gap:8px}
+  .scroll-hint{display:none}
+
+  .ticker-item{font-size:9px;padding:0 14px;letter-spacing:1.5px}
+
+  .ribbon{grid-template-columns:repeat(2,1fr)}
+  .rib-item{padding:16px 10px;border-right:none;border-bottom:1px solid rgba(255,248,240,.07)}
+  .rib-item:nth-child(odd){border-right:1px solid rgba(255,248,240,.07)}
+  .rib-item:nth-last-child(-n+2){border-bottom:none}
+  .rib-val{font-size:12px}
+  .rib-icon{font-size:18px}
+
+  .about-sec{padding:56px 16px}
+  .about-wrap{grid-template-columns:1fr;gap:36px}
+  .sec-h2{font-size:30px}
+  .about-left p{font-size:14px}
+  .feat-card:nth-child(2){margin-left:0}
+  .feat-card{padding:18px 16px;gap:14px}
+  .feat-icon-wrap{width:44px;height:44px;min-width:44px;font-size:20px}
+  .stat-b .num{font-size:32px}
+  .stat-row{gap:16px}
+
+  .specials-sec{padding:56px 16px}
+  .spec-days{gap:5px}
+  .spec-day-btn{font-size:9px;padding:6px 10px;letter-spacing:1px}
+  .spec-panel{grid-template-columns:1fr;gap:10px}
+  .spec-card{padding:18px 14px}
+  .sec-h{font-size:30px}
+
+  .gallery-sec{padding:56px 16px}
+  .photo-grid{grid-template-columns:repeat(2,1fr);gap:6px}
+  .photo-item.big{grid-row:span 1}
+  .photo-item.big img,.photo-item img{min-height:130px}
+
+  .menu-sec{padding:56px 16px}
+  .tabs{width:100%;justify-content:center}
+  .tb{font-size:10px;padding:8px 10px;letter-spacing:1px}
+  .mgrid{grid-template-columns:1fr;gap:10px}
+  .mc{padding:20px 16px}
+  .mc-emoji{font-size:32px}
+  .mc-name{font-size:18px}
+
+  .hi-sec{padding:56px 16px}
+  .hi-grid{grid-template-columns:repeat(2,1fr);gap:12px;margin-top:28px}
+  .hi-item{padding:22px 12px}
+  .hi-icon{font-size:28px}
+  .hi-num{font-size:38px}
+  .hi-title{font-size:16px}
+
+  .rev-sec{padding:56px 16px}
+  .rev-header{flex-direction:column;align-items:flex-start;margin-bottom:24px}
+  .score-big{font-size:60px}
+  .rgrid{grid-template-columns:1fr;gap:12px}
+  .rcard{padding:24px 18px}
+
+  .rating-sec{padding:56px 16px}
+  .rate-stars{gap:8px}
+  .rate-star{font-size:36px}
+  .rate-msg{font-size:17px}
+
+  .order-bar{flex-direction:column;gap:10px;padding:16px}
+  .order-bar p{text-align:center;font-size:11px}
+  .ob{font-size:10px;padding:9px 16px;gap:5px}
+
+  .loc-wrap{padding:56px 16px}
+  .loc-grid{grid-template-columns:1fr}
+  .loc-h{font-size:28px}
+  .map-embed{height:240px}
+  .hours-row{flex-wrap:wrap;gap:3px;padding:7px 5px}
+  .hours-time{font-size:10px;text-align:left;line-height:1.4}
+  .addr-val{font-size:12px}
+  .slink{padding:10px 12px;gap:10px}
+  .slink-name{font-size:12px}
+  .slink-handle{font-size:9px}
+  .right-col{gap:10px}
+
+  .mar-sec{padding:56px 16px}
+  .mar-h{font-size:36px}
+  .mar-p{font-size:13px}
+  .mar-chips{gap:6px}
+  .chip{font-size:10px;padding:5px 12px}
+
+  footer{padding:44px 16px 24px}
+  footer h2{font-size:26px}
+  .fgrid{gap:16px}
+  .fi .fv{font-size:12px}
+  footer .fp{font-size:11px}
+  .fcopy{font-size:10px}
+
+  .btt{bottom:16px;right:16px;width:38px;height:38px}
+  .lb-nav{width:36px;height:36px;font-size:14px}
+  .lb-prev{left:6px}.lb-next{right:6px}
+  .lightbox img{max-width:96vw;max-height:72vh}
+  .lb-close{top:14px;right:16px;font-size:30px}
+}
+
+</style>
+</head>
+<body>
+
+<div class="cur" id="dot" style="top:0;left:0"><div class="cur-dot" id="cd"></div></div>
+<div class="cur" id="ring" style="top:0;left:0"><div class="cur-ring" id="cr"></div></div>
+<canvas id="bg"></canvas>
+
+<!-- NAV -->
+<nav id="main-nav">
+  <a class="nav-logo" href="#"><em>Esmeralda's</em></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="esmeraldas-menu.html">Full Menu</a></li>
+    <li><a href="#reviews">Reviews</a></li>
+    <li><a href="#location">Find Us</a></li>
+  </ul>
+  <button class="nav-cta" onclick="smoothTo('#location')">Visit Us</button>
+  <button class="nav-ham" id="ham" onclick="toggleMobNav()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE NAV DRAWER -->
+<div class="mob-nav" id="mob-nav">
+  <a href="#about" onclick="smoothTo('#about');closeMobNav()">About</a>
+  <a href="#gallery" onclick="smoothTo('#gallery');closeMobNav()">Gallery</a>
+  <a href="#menu" onclick="smoothTo('#menu');closeMobNav()">Menu</a>
+  <a href="esmeraldas-menu.html">Full Menu</a>
+  <a href="#reviews" onclick="smoothTo('#reviews');closeMobNav()">Reviews</a>
+  <a href="#location" onclick="smoothTo('#location');closeMobNav()">Find Us</a>
+  <a class="mob-cta" href="tel:5745836361">📞 Call Us</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grain"></div>
+  <div class="hero-ring" style="width:300px;height:300px;animation-delay:0s"></div>
+  <div class="hero-ring" style="width:300px;height:300px;animation-delay:1.3s"></div>
+  <div class="hero-ring" style="width:300px;height:300px;animation-delay:2.6s"></div>
+  <div class="tag"><span class="tag-dot"></span>204 Rickey Rd · Monticello, IN</div>
+  <h1 class="hero-title"><em>Esmeralda's</em><span>Pancake House</span></h1>
+  <p class="hero-sub">Breakfast &amp; Mexican Kitchen · Est. 2006 · Monticello</p>
+  <div class="stars-row"><span class="s">★</span><span class="s">★</span><span class="s">★</span><span class="s">★</span><span class="s">★</span><span>4.4 · 1,518 reviews</span></div>
+  <div class="hero-btns">
+    <button class="btn-g" onclick="smoothTo('#gallery')">See Photos</button>
+    <button class="btn-o" onclick="smoothTo('#location')">Find Us</button>
+  </div>
+  <div class="scroll-hint"><div class="scroll-line"></div><span>Scroll</span></div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-track">
+    <span class="ticker-item">🥞 Best Breakfast in Town <span class="ticker-sep">·</span></span>
+    <span class="ticker-item">🌮 Award-Winning Mexican <span class="ticker-sep">·</span></span>
+    <span class="ticker-item">⭐ 4.4 Stars on Google <span class="ticker-sep">·</span></span>
+    <span class="ticker-item">🍳 Open 6AM Daily <span class="ticker-sep">·</span></span>
+    <span class="ticker-item">🍹 Full Bar Available <span class="ticker-sep">·</span></span>
+    <span class="ticker-item">🎁 Gift Certificates Available <span class="ticker-sep">·</span></span>
+    <span class="ticker-item">📞 (574) 583-6361 <span class="ticker-sep">·</span></span>
+    <span class="ticker-item">🥞 Weekend Breakfast Buffet <span class="ticker-sep">·</span></span>
+    <span class="ticker-item">🍽️ Friday Dinner Buffet 5–8PM <span class="ticker-sep">·</span></span>
+    <!-- duplicate for seamless loop -->
+    <span class="ticker-item">🥞 Best Breakfast in Town <span class="ticker-sep">·</span></span>
+    <span class="ticker-item">🌮 Award-Winning Mexican <span class="ticker-sep">·</span></span>
+    <span class="ticker-item">⭐ 4.4 Stars on Google <span class="ticker-sep">·</span></span>
+    <span class="ticker-item">🍳 Open 6AM Daily <span class="ticker-sep">·</span></span>
+    <span class="ticker-item">🍹 Full Bar Available <span class="ticker-sep">·</span></span>
+    <span class="ticker-item">🎁 Gift Certificates Available <span class="ticker-sep">·</span></span>
+    <span class="ticker-item">📞 (574) 583-6361 <span class="ticker-sep">·</span></span>
+    <span class="ticker-item">🥞 Weekend Breakfast Buffet <span class="ticker-sep">·</span></span>
+    <span class="ticker-item">🍽️ Friday Dinner Buffet 5–8PM <span class="ticker-sep">·</span></span>
+  </div>
+</div>
+
+<!-- RIBBON -->
+<div class="ribbon">
+  <div class="rib-item reveal"><span class="rib-icon">🕐</span><div class="rib-val">6AM – 3 / 9PM</div><div class="rib-lbl">Daily Hours</div></div>
+  <div class="rib-item reveal delay1"><span class="rib-icon">📞</span><div class="rib-val">(574) 583-6361</div><div class="rib-lbl">Call Us</div></div>
+  <div class="rib-item reveal delay2"><span class="rib-icon">📍</span><div class="rib-val">204 Rickey Rd, IN</div><div class="rib-lbl">Address</div></div>
+  <div class="rib-item reveal delay3"><span class="rib-icon">⭐</span><div class="rib-val">4.4 · 1,518 Reviews</div><div class="rib-lbl">Google Rating</div></div>
+</div>
+
+<!-- ABOUT -->
+<section class="about-sec" id="about">
+  <div class="about-wrap">
+    <div class="about-left reveal">
+      <p class="ov">Our Story</p>
+      <h2 class="sec-h2">Two cuisines,<br>one <em>legendary</em> table.</h2>
+      <p>Voted Best Mexican Restaurant, Best Breakfast, Best Kids Menu, and Best Salad Bar — we've been serving Monticello since 2006. Fluffy pancakes next to sizzling tacos, biscuits &amp; gravy beside burrito feasts. Large portions. Honest prices. Full bar.</p>
+      <div class="stat-row">
+        <div class="stat-b"><div class="num" id="cnt-r">0</div><div class="lbl">Guest Reviews</div></div>
+        <div class="divider-v"></div>
+        <div class="stat-b"><div class="num" id="cnt-s">0</div><div class="lbl">Star Rating</div></div>
+        <div class="divider-v"></div>
+        <div class="stat-b"><div class="num" id="cnt-m">0</div><div class="lbl">Years Open</div></div>
+      </div>
+    </div>
+    <div class="about-right reveal delay1">
+      <div class="feat-card"><div class="feat-icon-wrap ic-g">🏆</div><div><h4>Award-Winning Restaurant</h4><p>Voted Best Breakfast &amp; Best Mexican in the area</p></div></div>
+      <div class="feat-card"><div class="feat-icon-wrap ic-r">🍹</div><div><h4>Full Bar Available</h4><p>Cold beer, margaritas &amp; your favorite frosty drinks</p></div></div>
+      <div class="feat-card"><div class="feat-icon-wrap ic-gr">🍳</div><div><h4>Weekend Breakfast Buffet</h4><p>Sat &amp; Sun 8AM–1PM · Friday Dinner Buffet 5–8PM</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- DAILY SPECIALS -->
+<section class="specials-sec">
+  <div class="specials-inner">
+    <div class="reveal">
+      <p class="sec-ov">This Week</p>
+      <h2 class="sec-h">What's <em>on today.</em></h2>
+      <p class="sec-p">Tap a day to see what's on at Esmeralda's — auto-set to today.</p>
+    </div>
+    <div class="spec-days reveal delay1" id="spec-days">
+      <button class="spec-day-btn" data-day="0" onclick="showSpecial(0,this)">Sun</button>
+      <button class="spec-day-btn" data-day="1" onclick="showSpecial(1,this)">Mon</button>
+      <button class="spec-day-btn" data-day="2" onclick="showSpecial(2,this)">Tue</button>
+      <button class="spec-day-btn" data-day="3" onclick="showSpecial(3,this)">Wed</button>
+      <button class="spec-day-btn" data-day="4" onclick="showSpecial(4,this)">Thu</button>
+      <button class="spec-day-btn" data-day="5" onclick="showSpecial(5,this)">Fri</button>
+      <button class="spec-day-btn" data-day="6" onclick="showSpecial(6,this)">Sat</button>
+    </div>
+    <div id="spec-panels" class="reveal delay2">
+      <div class="spec-panel" data-panel="0">
+        <div class="spec-card"><span class="spec-card-emoji">🥞</span><div class="spec-card-name">Breakfast Buffet</div><div class="spec-card-note">All-you-can-eat 8AM–1PM. Pancakes, eggs, bacon &amp; more.</div><span class="spec-badge">8AM–1PM</span></div>
+        <div class="spec-card"><span class="spec-card-emoji">🍳</span><div class="spec-card-name">Omelets to Order</div><div class="spec-card-note">Made fresh — pick your fillings.</div><span class="spec-badge">All Morning</span></div>
+        <div class="spec-card"><span class="spec-card-emoji">☕</span><div class="spec-card-name">Bottomless Coffee</div><div class="spec-card-note">Fresh-brewed all morning, unlimited refills.</div><span class="spec-badge">Included</span></div>
+      </div>
+      <div class="spec-panel" data-panel="1">
+        <div class="spec-card"><span class="spec-card-emoji">🥞</span><div class="spec-card-name">Pancake Combo</div><div class="spec-card-note">Stack of 3 with two eggs and your choice of meat.</div><span class="spec-badge">All Day</span></div>
+        <div class="spec-card"><span class="spec-card-emoji">🌮</span><div class="spec-card-name">Taco Lunch</div><div class="spec-card-note">Three tacos with rice and beans, house-seasoned daily.</div><span class="spec-badge">Lunch</span></div>
+      </div>
+      <div class="spec-panel" data-panel="2">
+        <div class="spec-card"><span class="spec-card-emoji">🧇</span><div class="spec-card-name">Waffle Day</div><div class="spec-card-note">Build-your-own waffle with fresh toppings bar.</div><span class="spec-badge">All Day</span></div>
+        <div class="spec-card"><span class="spec-card-emoji">🥗</span><div class="spec-card-name">Taco Salad</div><div class="spec-card-note">Award-winning recipe, crispy shell &amp; house dressing.</div><span class="spec-badge">Fan Fave</span></div>
+      </div>
+      <div class="spec-panel" data-panel="3">
+        <div class="spec-card"><span class="spec-card-emoji">🧇</span><div class="spec-card-name">Waffle Wednesday</div><div class="spec-card-note">Classic or with berries &amp; cream.</div><span class="spec-badge">All Day</span></div>
+        <div class="spec-card"><span class="spec-card-emoji">🌯</span><div class="spec-card-name">Burrito Bowl</div><div class="spec-card-note">Deconstructed burrito with all the fixings over rice.</div><span class="spec-badge">Lunch</span></div>
+      </div>
+      <div class="spec-panel" data-panel="4">
+        <div class="spec-card"><span class="spec-card-emoji">🍹</span><div class="spec-card-name">Full Bar Open Late</div><div class="spec-card-note">Cold beer, margaritas &amp; cocktails until 9PM.</div><span class="spec-badge">Until 9PM</span></div>
+        <div class="spec-card"><span class="spec-card-emoji">🌮</span><div class="spec-card-name">Mexican Dinner Menu</div><div class="spec-card-note">Extended menu with nightly specials.</div><span class="spec-badge">Dinner</span></div>
+        <div class="spec-card"><span class="spec-card-emoji">🥞</span><div class="spec-card-name">Breakfast All Day</div><div class="spec-card-note">Pancakes &amp; eggs served all day, no cut-off.</div><span class="spec-badge">All Day</span></div>
+      </div>
+      <div class="spec-panel" data-panel="5">
+        <div class="spec-card"><span class="spec-card-emoji">🍽️</span><div class="spec-card-name">Friday Dinner Buffet</div><div class="spec-card-note">Mexican &amp; American spread, fresh and hot.</div><span class="spec-badge">5–8PM</span></div>
+        <div class="spec-card"><span class="spec-card-emoji">🍹</span><div class="spec-card-name">Margarita Night</div><div class="spec-card-note">House margaritas &amp; cold beer to pair with dinner.</div><span class="spec-badge">Full Bar</span></div>
+        <div class="spec-card"><span class="spec-card-emoji">🌮</span><div class="spec-card-name">Taco Bar</div><div class="spec-card-note">Build-your-own tacos at the dinner buffet station.</div><span class="spec-badge">Included</span></div>
+      </div>
+      <div class="spec-panel" data-panel="6">
+        <div class="spec-card"><span class="spec-card-emoji">🥞</span><div class="spec-card-name">Breakfast Buffet</div><div class="spec-card-note">The big weekend spread — 8AM to 1PM, all-you-can-eat.</div><span class="spec-badge">8AM–1PM</span></div>
+        <div class="spec-card"><span class="spec-card-emoji">🌮</span><div class="spec-card-name">Mexican Lunch</div><div class="spec-card-note">Full Mexican menu available from open to close.</div><span class="spec-badge">All Day</span></div>
+        <div class="spec-card"><span class="spec-card-emoji">🍹</span><div class="spec-card-name">Bar Open Late</div><div class="spec-card-note">Frosty drinks &amp; margaritas until 9PM.</div><span class="spec-badge">Until 9PM</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section class="gallery-sec" id="gallery">
+  <div class="gallery-inner">
+    <p class="sec-ov reveal">Photo Gallery</p>
+    <h2 class="sec-h reveal delay1">Fresh from our <em>kitchen.</em></h2>
+    <p class="sec-p reveal delay2">Real photos from Esmeralda's. Tap any photo to enlarge.</p>
+    <div class="photo-grid reveal">
+      <div class="photo-item big" onclick="openLightbox(0)">
+        <img src="https://static.wixstatic.com/media/f81ee8_2e77ce4ad9b344dfa65016cfdf3ec797~mv2_d_4500_3000_s_4_2.jpeg/v1/fill/w_800,h_600,al_c,q_85/f81ee8_2e77ce4ad9b344dfa65016cfdf3ec797~mv2_d_4500_3000_s_4_2.jpeg" alt="Esmeralda's" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&q=80'">
+        <div class="photo-caption">The Kitchen</div><div class="photo-zoom">⤢</div>
+      </div>
+      <div class="photo-item" onclick="openLightbox(1)">
+        <img src="https://static.wixstatic.com/media/f81ee8_82b02f14bc8b4eacb8f4239ce5b61204~mv2_d_7000_4667_s_4_2.jpeg/v1/fill/w_600,h_400,al_c,q_85/f81ee8_82b02f14bc8b4eacb8f4239ce5b61204~mv2_d_7000_4667_s_4_2.jpeg" alt="Fresh food" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1528605248644-14dd04022da1?w=600&q=80'">
+        <div class="photo-caption">Fresh &amp; Homemade</div><div class="photo-zoom">⤢</div>
+      </div>
+      <div class="photo-item" onclick="openLightbox(2)">
+        <img src="https://static.wixstatic.com/media/f81ee8_132a6d42476a4263a3f2d8355b43084d~mv2_d_4608_3072_s_4_2.jpeg/v1/fill/w_600,h_400,al_c,q_85/f81ee8_132a6d42476a4263a3f2d8355b43084d~mv2_d_4608_3072_s_4_2.jpeg" alt="Breakfast" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=600&q=80'">
+        <div class="photo-caption">Breakfast Classics</div><div class="photo-zoom">⤢</div>
+      </div>
+      <div class="photo-item" onclick="openLightbox(3)">
+        <img src="https://static.wixstatic.com/media/f81ee8_d1dd654c319d4553a42550e15be02ab8~mv2_d_3900_2600_s_4_2.jpeg/v1/fill/w_600,h_400,al_c,q_85/f81ee8_d1dd654c319d4553a42550e15be02ab8~mv2_d_3900_2600_s_4_2.jpeg" alt="Mexican food" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=600&q=80'">
+        <div class="photo-caption">Mexican Favorites</div><div class="photo-zoom">⤢</div>
+      </div>
+      <div class="photo-item" onclick="openLightbox(4)">
+        <img src="https://static.wixstatic.com/media/f81ee8_182239121f4d459f82008b2d3996f82d~mv2.jpg/v1/fill/w_600,h_400,al_c,q_85/f81ee8_182239121f4d459f82008b2d3996f82d~mv2.jpg" alt="Esmeralda's" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1551218808-94e220e084d2?w=600&q=80'">
+        <div class="photo-caption">Come Dine With Us</div><div class="photo-zoom">⤢</div>
+      </div>
+    </div>
+    <p style="margin-top:10px;font-size:11px;color:rgba(255,248,240,.22);text-align:right">📸 Photos from esmeraldasrestaurant.com</p>
+  </div>
+</section>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+  <button class="lb-close" onclick="closeLightboxDirect()">×</button>
+  <button class="lb-nav lb-prev" onclick="lbNav(-1);event.stopPropagation()">&#8592;</button>
+  <img id="lb-img" src="" alt="">
+  <button class="lb-nav lb-next" onclick="lbNav(1);event.stopPropagation()">&#8594;</button>
+  <div class="lb-counter" id="lb-counter">1 / 5</div>
+</div>
+
+<!-- MENU -->
+<section class="menu-sec" id="menu">
+  <div class="menu-inner">
+    <p class="sec-ov reveal">Our Kitchen</p>
+    <h2 class="sec-h reveal delay1">Made fresh, <em>every morning.</em></h2>
+    <p class="sec-p reveal delay2">From sunrise stacks to south-of-the-border favorites.</p>
+    <div class="tabs reveal delay1">
+      <button class="tb on" onclick="showTab('b',this)">🥞 Breakfast</button>
+      <button class="tb" onclick="showTab('m',this)">🌮 Mexican</button>
+      <button class="tb" onclick="showTab('f',this)">🍽️ Buffet</button>
+    </div>
+    <div id="tab-b" class="mgrid">
+      <div class="mc reveal"><span class="mc-emoji">🥞</span><div class="mc-name">Fluffy Pancakes</div><div class="mc-desc">Golden stacks, perfectly light — the reason everyone comes back.</div><span class="mc-badge">Fan Favorite</span></div>
+      <div class="mc reveal delay1"><span class="mc-emoji">🧇</span><div class="mc-name">Waffles</div><div class="mc-desc">Crisp edges, cloud-soft centers, real maple syrup.</div><span class="mc-badge">Popular</span></div>
+      <div class="mc reveal delay2"><span class="mc-emoji">🍳</span><div class="mc-name">Omelets &amp; Skillets</div><div class="mc-desc">Chorizo skillets, corned beef hash, loaded to order.</div><span class="mc-badge">Customizable</span></div>
+      <div class="mc reveal delay3"><span class="mc-emoji">🥣</span><div class="mc-name">Biscuits &amp; Gravy</div><div class="mc-desc">Hearty, comforting, piled high. A true breakfast legend.</div><span class="mc-badge">Classic</span></div>
+    </div>
+    <div id="tab-m" class="mgrid" style="display:none">
+      <div class="mc reveal"><span class="mc-emoji">🌮</span><div class="mc-name">Tacos</div><div class="mc-desc">Seasoned and satisfying, stuffed with bold fillings.</div><span class="mc-badge">Fan Favorite</span></div>
+      <div class="mc reveal delay1"><span class="mc-emoji">🥗</span><div class="mc-name">Taco Salad</div><div class="mc-desc">Fresh, vibrant, packed with flavor from top to bottom.</div><span class="mc-badge">Well-Loved</span></div>
+      <div class="mc reveal delay2"><span class="mc-emoji">🌯</span><div class="mc-name">Burritos</div><div class="mc-desc">Hearty and generous, wrapped to perfection.</div><span class="mc-badge">Popular</span></div>
+      <div class="mc reveal delay3"><span class="mc-emoji">🫔</span><div class="mc-name">Quesadillas</div><div class="mc-desc">Beef or chicken, melted crispy any time of day.</div><span class="mc-badge">All-Day</span></div>
+    </div>
+    <div id="tab-f" class="mgrid" style="display:none">
+      <div class="mc reveal"><span class="mc-emoji">🍳</span><div class="mc-name">Breakfast Buffet</div><div class="mc-desc">Sat &amp; Sun 8AM–1PM + all major holidays.</div><span class="mc-badge">Weekends</span></div>
+      <div class="mc reveal delay1"><span class="mc-emoji">🌮</span><div class="mc-name">Dinner Buffet</div><div class="mc-desc">Every Friday 5–8PM. Mexican &amp; American spread.</div><span class="mc-badge">Fridays</span></div>
+      <div class="mc reveal delay2"><span class="mc-emoji">🍹</span><div class="mc-name">Full Bar</div><div class="mc-desc">Cold beer, margaritas &amp; your favorite frosty beverages.</div><span class="mc-badge">Full Bar</span></div>
+    </div>
+    <div class="menu-cta reveal delay2">
+      <a href="menu.html">View Full Menu with Photos →</a>
+    </div>
+  </div>
+</section>
+
+<!-- HIGHLIGHTS -->
+<section class="hi-sec">
+  <div class="hi-inner">
+    <div class="reveal">
+      <p class="ov">Why Guests Love Us</p>
+      <h2 class="sec-h2">The little things that make a <em>big difference.</em></h2>
+    </div>
+    <div class="hi-grid">
+      <div class="hi-item reveal"><span class="hi-num">01</span><span class="hi-icon">👨‍👩‍👧‍👦</span><div class="hi-title">Family Friendly</div><p class="hi-desc">Warm atmosphere for every age</p></div>
+      <div class="hi-item reveal delay1"><span class="hi-num">02</span><span class="hi-icon">⚡</span><div class="hi-title">Quick Service</div><p class="hi-desc">Fast, attentive, caring staff</p></div>
+      <div class="hi-item reveal delay2"><span class="hi-num">03</span><span class="hi-icon">💰</span><div class="hi-title">Great Value</div><p class="hi-desc">Huge portions, fair prices always</p></div>
+      <div class="hi-item reveal delay3"><span class="hi-num">04</span><span class="hi-icon">🏆</span><div class="hi-title">Award Winning</div><p class="hi-desc">Best Breakfast &amp; Best Mexican voted</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="rev-sec" id="reviews">
+  <div class="rev-inner">
+    <div class="rev-header reveal">
+      <div>
+        <p style="font-size:11px;font-weight:500;letter-spacing:4px;text-transform:uppercase;color:var(--rust);margin-bottom:10px">Guest Reviews</p>
+        <div style="display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap">
+          <div class="score-big" id="cnt-score">0</div>
+          <div class="score-side"><div class="str"><span>★</span><span>★</span><span>★</span><span>★</span><span style="opacity:.4">★</span></div><p>Based on 1,518 Google reviews</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="rgrid">
+      <div class="rcard reveal"><div class="rstr"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div><p class="rtext">"Best pancakes I have ever had — fluffy, golden, and the portions are absolutely massive. Will be back every visit!"</p><div class="rvr"><div class="rvr-av" style="background:#B84A1A">SL</div><div><div class="rvr-name">Sarah L.</div><div class="rvr-time">Google Review</div></div></div></div>
+      <div class="rcard reveal delay1"><div class="rstr"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div><p class="rtext">"The chorizo skillets are phenomenal. Best Mexican I've found in Indiana — we go back every time."</p><div class="rvr"><div class="rvr-av" style="background:#2D5A27">MR</div><div><div class="rvr-name">Mike R.</div><div class="rvr-time">Google Review</div></div></div></div>
+      <div class="rcard reveal delay2"><div class="rstr"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div><p class="rtext">"Weekend breakfast buffet is phenomenal — always fresh, hot, and so much to pick from."</p><div class="rvr"><div class="rvr-av" style="background:#C8860A">JT</div><div><div class="rvr-name">Jessica T.</div><div class="rvr-time">TripAdvisor Review</div></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- RATE WIDGET -->
+<section class="rating-sec">
+  <div class="rating-inner reveal">
+    <p style="font-size:11px;font-weight:500;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:12px">Share Your Experience</p>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:44px;font-weight:600;color:#FFF8F0;line-height:1.1">How was your <em style="color:var(--gold2);font-style:italic">visit?</em></h2>
+    <div class="rate-stars" id="rate-stars">
+      <span class="rate-star" data-val="1" onmouseenter="hoverStars(1)" onmouseleave="unhoverStars()" onclick="selectStar(1)">★</span>
+      <span class="rate-star" data-val="2" onmouseenter="hoverStars(2)" onmouseleave="unhoverStars()" onclick="selectStar(2)">★</span>
+      <span class="rate-star" data-val="3" onmouseenter="hoverStars(3)" onmouseleave="unhoverStars()" onclick="selectStar(3)">★</span>
+      <span class="rate-star" data-val="4" onmouseenter="hoverStars(4)" onmouseleave="unhoverStars()" onclick="selectStar(4)">★</span>
+      <span class="rate-star" data-val="5" onmouseenter="hoverStars(5)" onmouseleave="unhoverStars()" onclick="selectStar(5)">★</span>
+    </div>
+    <div class="rate-msg" id="rate-msg">Tap a star to rate us</div>
+    <button class="rate-submit" id="rate-submit" onclick="submitRating()">Leave a Review on Google</button>
+    <div class="rate-thanks" id="rate-thanks">Thank you! We love hearing from you. 🌟</div>
+  </div>
+</section>
+
+<!-- ORDER BAR -->
+<div class="order-bar">
+  <p>Open daily from 6AM · Dine-in or carry out · Prices subject to change</p>
+  <div class="order-btns">
+    <a class="ob" href="tel:5745836361">📞 Call to Order</a>
+    <a class="ob" href="esmeraldas-menu.html">📋 Full Menu</a>
+    <a class="ob" href="https://www.esmeraldasrestaurant.com" target="_blank">🌐 Website</a>
+  </div>
+</div>
+
+<!-- LOCATION -->
+<div class="loc-wrap" id="location">
+  <div class="loc-inner">
+    <div class="loc-header reveal">
+      <p class="loc-ov">Find Us</p>
+      <h2 class="loc-h">Come visit us in <em>Monticello, Indiana</em></h2>
+    </div>
+    <div class="loc-grid">
+      <div class="map-card reveal">
+        <iframe class="map-embed"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3048.5!2d-86.7757874!3d40.7671327!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8813b030cbb426b1%3A0xbfbaadf3e5185a7b!2sEsmeralda's%20Pancake%20House!5e0!3m2!1sen!2sus!4v1"
+          allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <a class="map-btn" href="https://www.google.com/maps/place/Esmeralda's+Pancake+House/@40.7999218,-86.1614028,9.17z" target="_blank">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Open in Google Maps
+        </a>
+      </div>
+      <div class="right-col reveal delay1">
+        <div class="addr-card">
+          <div class="addr-row"><div class="addr-icon">📍</div><div><div class="addr-label">Address</div><div class="addr-val">204 W. Rickey Road<br>Monticello, IN 47960</div></div></div>
+          <div class="addr-row"><div class="addr-icon">📞</div><div><div class="addr-label">Phone</div><div class="addr-val"><a href="tel:5745836361">(574) 583-6361</a></div></div></div>
+          <div class="addr-row"><div class="addr-icon">💰</div><div><div class="addr-label">Price Range</div><div class="addr-val">$10 – $20 per person</div></div></div>
+          <div class="addr-row"><div class="addr-icon">🎁</div><div><div class="addr-label">Gift Certificates</div><div class="addr-val">Available in-store</div></div></div>
+        </div>
+        <div class="hours-card" id="hours-card">
+          <div class="hours-lbl">Opening Hours</div>
+          <div class="hours-row" data-day="1,2,3"><span class="hours-day">Mon – Wed</span><span class="hours-time">6:00 AM – 3:00 PM</span></div>
+          <div class="hours-row" data-day="4"><span class="hours-day">Thu</span><span class="hours-time late">6:00 AM – 9:00 PM</span></div>
+          <div class="hours-row" data-day="5"><span class="hours-day">Fri</span><span class="hours-time late">6:00 AM – 9:00 PM · Dinner Buffet 5–8</span></div>
+          <div class="hours-row" data-day="6"><span class="hours-day">Sat</span><span class="hours-time late">6:00 AM – 9:00 PM · Bfast Buffet 8–1</span></div>
+          <div class="hours-row" data-day="0"><span class="hours-day">Sun</span><span class="hours-time">6:00 AM – 3:00 PM · Bfast Buffet 8–1</span></div>
+        </div>
+        <div class="social-card">
+          <div class="social-lbl">Follow &amp; Connect</div>
+          <div class="social-links">
+            <a class="slink fb" href="https://www.facebook.com/EsmeraldasPancakeHouse/" target="_blank">
+              <div class="slink-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+              </div>
+              <div class="slink-text">
+                <span class="slink-name">Facebook</span>
+                <span class="slink-handle">EsmeraldasPancakeHouse</span>
+              </div>
+            </a>
+            <a class="slink ig" href="https://www.instagram.com/explore/locations/589336279/esmeraldas-pancake-house/" target="_blank">
+              <div class="slink-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+              </div>
+              <div class="slink-text">
+                <span class="slink-name">Instagram</span>
+                <span class="slink-handle">esmeraldas_pancakes</span>
+              </div>
+            </a>
+            <a class="slink gm" href="https://www.google.com/maps/place/Esmeralda's+Pancake+House/@40.7999218,-86.1614028,9.17z" target="_blank">
+              <div class="slink-icon">
+                <svg width="18" height="18" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><path fill="#4285F4" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#34A853" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#EA4335" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+              </div>
+              <div class="slink-text">
+                <span class="slink-name" style="color:#222">Google Maps</span>
+                <span class="slink-handle" style="color:#666">Get Directions</span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<section class="mar-sec">
+  <div class="mar-inner reveal">
+    <h2 class="mar-h">Come hungry.<br><em>Leave happy.</em></h2>
+    <p class="mar-p">Open every day in Monticello, Indiana. Dine-in, takeout, full bar — always fresh, always welcoming.</p>
+    <div class="mar-chips">
+      <span class="chip">📍 204 Rickey Rd, Monticello IN</span>
+      <span class="chip">📞 (574) 583-6361</span>
+      <span class="chip">⭐ 4.4 Stars · 1,518 Reviews</span>
+      <span class="chip">🎁 Gift Certificates Available</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <h2><em>Esmeralda's</em> Pancake House</h2>
+  <p class="fp">204 W. Rickey Rd · Monticello, IN 47960 · <a href="tel:5745836361">(574) 583-6361</a></p>
+  <p class="fp"><a href="https://www.esmeraldasrestaurant.com/" target="_blank">esmeraldasrestaurant.com</a> · <a href="esmeraldas-menu.html">View Full Menu</a> · Dine-In or Carry Out</p>
+  <div class="footer-social">
+    <a class="fsoc fb" href="https://www.facebook.com/EsmeraldasPancakeHouse/" target="_blank">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+    </a>
+    <a class="fsoc ig" href="https://www.instagram.com/explore/locations/589336279/esmeraldas-pancake-house/" target="_blank">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+    </a>
+    <a class="fsoc gm" href="https://www.google.com/maps/place/Esmeralda's+Pancake+House/@40.7999218,-86.1614028,9.17z" target="_blank">
+      <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#4285F4" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#34A853" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#EA4335" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+    </a>
+  </div>
+  <div class="fgrid">
+    <div class="fi"><div class="fl">Address</div><div class="fv">204 W. Rickey Rd, IN 47960</div></div>
+    <div class="fi"><div class="fl">Phone</div><div class="fv">(574) 583-6361</div></div>
+    <div class="fi"><div class="fl">Hours</div><div class="fv">Mon–Sun from 6:00 AM</div></div>
+    <div class="fi"><div class="fl">Rating</div><div class="fv">⭐ 4.4 · 1,518 Reviews</div></div>
+  </div>
+  <hr class="fline">
+  <p class="fcopy">© 2026 Esmeralda's Pancake House · Monticello, IN · Est. 2006 · Website by <a href="#">Puzzled Marketing</a></p>
+</footer>
+
+<!-- BACK TO TOP -->
+<button class="btt" id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0D0500" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+</button>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CURSOR (desktop only) ──
+const dot=document.getElementById('dot'),ring=document.getElementById('ring'),cd=document.getElementById('cd'),cr=document.getElementById('cr');
+let mx=0,my=0,rx=0,ry=0;
+if(window.matchMedia('(pointer:fine)').matches){
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px'});
+  (function animCur(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animCur)})();
+  document.querySelectorAll('button,a,[onclick],.mc,.rcard,.feat-card,.hi-item,.spec-card,.rate-star,.rib-item').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{cd.classList.add('big');cr.classList.add('big')});
+    el.addEventListener('mouseleave',()=>{cd.classList.remove('big');cr.classList.remove('big')});
+  });
+}
+
+// ── BG CANVAS ──
+const c=document.getElementById('bg'),ctx=c.getContext('2d');
+function resize(){c.width=window.innerWidth;c.height=window.innerHeight}resize();
+window.addEventListener('resize',resize);
+const pts=Array.from({length:55},()=>({x:Math.random()*window.innerWidth,y:Math.random()*window.innerHeight,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*2+.5,color:`hsl(${Math.random()*30+20},60%,${Math.random()*30+40}%)`}));
+(function draw(){ctx.clearRect(0,0,c.width,c.height);pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=c.width;if(p.x>c.width)p.x=0;if(p.y<0)p.y=c.height;if(p.y>c.height)p.y=0;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=p.color;ctx.fill()});pts.forEach((a,i)=>pts.slice(i+1).forEach(b=>{const d=Math.hypot(a.x-b.x,a.y-b.y);if(d<100){ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.strokeStyle=`rgba(200,134,10,${.12*(1-d/100)})`;ctx.lineWidth=.5;ctx.stroke()}}));requestAnimationFrame(draw)})();
+
+// ── NAV SCROLL ──
+window.addEventListener('scroll',()=>{
+  document.getElementById('main-nav').classList.toggle('scrolled',window.scrollY>60);
+  document.getElementById('btt').classList.toggle('show',window.scrollY>400);
+});
+
+// ── MOBILE NAV ──
+let mobOpen=false;
+function toggleMobNav(){
+  mobOpen=!mobOpen;
+  document.getElementById('mob-nav').classList.toggle('open',mobOpen);
+  document.getElementById('ham').classList.toggle('open',mobOpen);
+}
+function closeMobNav(){mobOpen=false;document.getElementById('mob-nav').classList.remove('open');document.getElementById('ham').classList.remove('open')}
+
+// ── SMOOTH SCROLL ──
+function smoothTo(sel){const el=document.querySelector(sel);if(el)el.scrollIntoView({behavior:'smooth'});closeMobNav()}
+
+// ── MENU TABS ──
+function showTab(id,btn){
+  ['b','m','f'].forEach(t=>document.getElementById('tab-'+t).style.display=t===id?'grid':'none');
+  document.querySelectorAll('.tb').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+}
+
+// ── COUNT UP ──
+function countUp(el,target,dec,suf){const dur=1800;let st=null;(function run(ts){if(!st)st=ts;const p=Math.min((ts-st)/dur,1),e=1-Math.pow(1-p,4);el.textContent=(dec?(e*target).toFixed(1):Math.round(e*target))+(suf||'');if(p<1)requestAnimationFrame(run)})(performance.now())}
+
+// ── REVEAL ON SCROLL ──
+const obs=new IntersectionObserver(entries=>entries.forEach(e=>{
+  if(e.isIntersecting){
+    e.target.classList.add('revealed');
+    if(e.target.id==='cnt-r')countUp(e.target,1518,0,'');
+    if(e.target.id==='cnt-s')countUp(e.target,4.4,1,'★');
+    if(e.target.id==='cnt-m')countUp(e.target,19,0,'+');
+    if(e.target.id==='cnt-score')countUp(e.target,4.4,1,'');
+  }
+}),{threshold:.12});
+document.querySelectorAll('.reveal,#cnt-r,#cnt-s,#cnt-m,#cnt-score').forEach(el=>obs.observe(el));
+
+// ── TODAY'S HOURS HIGHLIGHT ──
+const today=new Date().getDay();
+document.querySelectorAll('.hours-row[data-day]').forEach(row=>{
+  const days=row.dataset.day.split(',').map(Number);
+  if(days.includes(today)){
+    row.classList.add('today');
+    const dayEl=row.querySelector('.hours-day');
+    dayEl.classList.add('today-label');
+    dayEl.insertAdjacentHTML('afterend','<span class="today-chip">Today</span>');
+  }
+});
+
+// ── DAILY SPECIALS ──
+(function initSpecials(){
+  const btn=document.querySelector(`.spec-day-btn[data-day="${today}"]`);
+  if(btn)showSpecial(today,btn);
+})();
+function showSpecial(day,btn){
+  document.querySelectorAll('.spec-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.spec-day-btn').forEach(b=>b.classList.remove('active'));
+  const panel=document.querySelector(`.spec-panel[data-panel="${day}"]`);
+  if(panel)panel.classList.add('active');
+  if(btn)btn.classList.add('active');
+}
+
+// ── LIGHTBOX ──
+const lbSrcs=[...document.querySelectorAll('.photo-item img')].map(img=>img.src);
+let lbIdx=0;
+function openLightbox(i){
+  lbIdx=i;
+  document.getElementById('lb-img').src=lbSrcs[i];
+  document.getElementById('lb-counter').textContent=(i+1)+' / '+lbSrcs.length;
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeLightbox(e){if(e.target===document.getElementById('lightbox'))closeLightboxDirect()}
+function closeLightboxDirect(){document.getElementById('lightbox').classList.remove('open');document.body.style.overflow=''}
+function lbNav(dir){lbIdx=(lbIdx+dir+lbSrcs.length)%lbSrcs.length;openLightbox(lbIdx)}
+document.addEventListener('keydown',e=>{
+  if(!document.getElementById('lightbox').classList.contains('open'))return;
+  if(e.key==='ArrowLeft')lbNav(-1);
+  if(e.key==='ArrowRight')lbNav(1);
+  if(e.key==='Escape')closeLightboxDirect();
+});
+
+// ── RATING WIDGET ──
+let selectedRating=0;
+const rmsgs=['','We want to do better!','Could be improved','Pretty good!','Great experience!','Absolutely loved it! ⭐'];
+function hoverStars(n){document.querySelectorAll('.rate-star').forEach((s,i)=>s.classList.toggle('lit',i<n));document.getElementById('rate-msg').textContent=rmsgs[n];document.getElementById('rate-msg').classList.add('show')}
+function unhoverStars(){document.querySelectorAll('.rate-star').forEach((s,i)=>s.classList.toggle('lit',i<selectedRating));if(!selectedRating){document.getElementById('rate-msg').textContent='Tap a star to rate us';document.getElementById('rate-msg').classList.remove('show')}}
+function selectStar(n){
+  selectedRating=n;
+  document.querySelectorAll('.rate-star').forEach((s,i)=>s.classList.toggle('lit',i<n));
+  document.getElementById('rate-msg').textContent=rmsgs[n];document.getElementById('rate-msg').classList.add('show');
+  document.getElementById('rate-submit').classList.add('visible');
+}
+function submitRating(){
+  if(!selectedRating)return;
+  document.getElementById('rate-stars').style.display='none';
+  document.getElementById('rate-msg').style.display='none';
+  document.getElementById('rate-submit').style.display='none';
+  document.getElementById('rate-thanks').style.display='block';
+  if(selectedRating>=4)setTimeout(()=>window.open('https://www.google.com/maps/place/Esmeralda\'s+Pancake+House/@40.7671327,-86.7735987,15z/','_blank'),900);
+}
+
+// ── TOAST ──
+function showToast(msg,dur=3500){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),dur);
+}
+window.addEventListener('load',()=>setTimeout(()=>showToast('🥞 Open today from 6AM — come on in!',4000),2200));
+</script>
+</body>
+</html>
